@@ -1,0 +1,36 @@
+main {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+}
+
+mat-accordion {
+  width: 100%;
+}
+
+h2 {
+  margin: 0;
+}
+
+#criteria-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+#configuration-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+form > * {
+  width: 100%;
+}
+
+.buttons-container {
+  margin-top: 24px;
+}

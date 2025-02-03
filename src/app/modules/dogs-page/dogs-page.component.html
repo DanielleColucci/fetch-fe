@@ -1,0 +1,124 @@
+<main>
+  <mat-accordion>
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h2>Search for Dogs</h2>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <form id="criteria-form" [formGroup]="searchForm">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Breeds</mat-label>
+          <mat-chip-grid #chipGrid formControlName="breeds">
+            @for (breed of searchForm.value.breeds; track $index) {
+            <mat-chip-row (removed)="remove('breed', breed)">
+              {{ breed }}
+              <button matChipRemove [attr.aria-label]="'remove ' + breed">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input
+            name="currentBreed"
+            #breedInput
+            [(ngModel)]="currentBreed"
+            [ngModelOptions]="{ standalone: true }"
+            [matChipInputFor]="chipGrid"
+            [matAutocomplete]="auto"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="breedSelected($event); breedInput.value = ''"
+          >
+            @for (breed of filteredBreeds(); track breed) {
+            <mat-option [value]="breed">{{ breed }}</mat-option>
+            }
+          </mat-autocomplete>
+          <button mat-icon-button matSuffix (click)="onClear('breed')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Zip Codes</mat-label>
+          <mat-chip-grid #chipGrid2>
+            @for (zip of searchForm.value.zipCodes; track $index) {
+            <mat-chip-row
+              highlighted
+              (removed)="remove('zipCode', zip)"
+              [editable]="true"
+              (edited)="edit(zip, $event)"
+              [aria-description]="'press enter to edit ' + zip"
+              color="accent"
+            >
+              {{ zip }}
+              <button matChipRemove [attr.aria-label]="'remove ' + zip">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            }
+            <input
+              [matChipInputFor]="chipGrid2"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              [matChipInputAddOnBlur]="true"
+              (matChipInputTokenEnd)="add($event)"
+            />
+          </mat-chip-grid>
+          <button mat-icon-button matSuffix (click)="onClear('zipCode')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Minimum Age</mat-label>
+          <input matInput formControlName="ageMin" type="number" min="0" />
+        </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Maximum Age</mat-label>
+          <input matInput formControlName="ageMax" type="number" min="0" />
+        </mat-form-field>
+      </form>
+
+      <br />
+
+      <h4>Result Configuration:</h4>
+      <form id="configuration-form" [formGroup]="searchForm">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Result Size</mat-label>
+          <input
+            matInput
+            formControlName="size"
+            type="number"
+            min="0"
+            max="100"
+          />
+        </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Result Page</mat-label>
+          <input matInput formControlName="from" type="number" min="0" />
+        </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Sort By Field</mat-label>
+          <mat-select formControlName="sortField">
+            <mat-option value="breed">Breed</mat-option>
+            <mat-option value="name">Name</mat-option>
+            <mat-option value="age">Age</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Sort Direction</mat-label>
+          <mat-select formControlName="sortDirection">
+            <mat-option value="asc">Ascending</mat-option>
+            <mat-option value="desc">Descending</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+
+      <div class="buttons-container">
+        <button mat-raised-button color="primary" (click)="onSearch()">
+          SEARCH
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</main>

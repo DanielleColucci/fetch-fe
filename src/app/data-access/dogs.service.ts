@@ -1,16 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LoginService {
+export class DogsService {
   readonly #baseUrl = 'https://frontend-take-home-service.fetch.com';
   readonly #http = inject(HttpClient);
 
-  login(loginRequest: { email: string; password: string }) {
-    return this.#http.post(`${this.#baseUrl}/auth/login`, loginRequest, {
-      responseType: 'text',
+  getDogBreeds$() {
+    return this.#http.get<string[]>(`${this.#baseUrl}/dogs/breeds`, {
       withCredentials: true,
     });
   }

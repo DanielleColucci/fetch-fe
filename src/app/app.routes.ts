@@ -14,4 +14,12 @@ export const routes: Routes = [
         (esm) => esm.LoginPageComponent
       ),
   },
+  {
+    path: 'dogs',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./modules/dogs-page/dogs-page.component').then(
+        (esm) => esm.DogsPageComponent
+      ),
+  },
 ];

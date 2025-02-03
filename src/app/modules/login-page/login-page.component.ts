@@ -8,6 +8,7 @@ import { LoginService } from '../../data-access/login.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ProgressSpinnerDialogComponent } from '../progress-spinner-dialog/progress-spinner-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 const MAT_MODULES = [
   MatFormFieldModule,
@@ -28,10 +29,11 @@ export class LoginPageComponent {
   readonly #loginService = inject(LoginService);
   readonly #dialog = inject(MatDialog);
   readonly #snackBar = inject(MatSnackBar);
+  readonly #router = inject(Router);
 
   readonly loginForm = this.#fb.group({
     name: ['', Validators.required],
-    email: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
   });
 
   async onSubmit() {
@@ -46,7 +48,7 @@ export class LoginPageComponent {
         next: (res) => {
           dialogRef.close();
           if (res === 'OK') {
-            console.log('TODO: navigate to the next page');
+            this.#router.navigate(['/dogs']);
           }
         },
         error: (err) => {
