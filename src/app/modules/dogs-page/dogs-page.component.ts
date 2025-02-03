@@ -6,10 +6,15 @@ import {
   model,
   signal,
 } from '@angular/core';
-import { DogsService } from '../../data-access/dogs.service';
+import { DogSearchCriteria, DogsService } from '../../data-access/dogs.service';
 import { firstValueFrom } from 'rxjs';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -67,7 +72,7 @@ export class DogsPageComponent implements OnInit {
     breeds: [[] as string[]],
     zipCodes: [[] as string[]],
     ageMin: [null as number | null],
-    ageMax: [null as number | null],
+    ageMax: [null as number | null, Validators.max(100)],
     size: [null as number | null],
     from: [null as number | null],
     sortField: ['' as 'breed' | 'name' | 'age'],
@@ -147,7 +152,9 @@ export class DogsPageComponent implements OnInit {
     }
   }
 
-  onSearch() {
-    console.log(this.searchForm.value);
+  async onSearch() {
+    this.#dogsService
+      .search(this.searchForm.value as DogSearchCriteria)
+      .then((d) => console.log(d));
   }
 }

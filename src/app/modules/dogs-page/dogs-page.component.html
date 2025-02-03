@@ -92,6 +92,9 @@
             min="0"
             max="100"
           />
+          @if (searchForm.get('size')?.hasError('max')) {
+          <mat-error>Page must be less than or equal to 100</mat-error>
+          }
         </mat-form-field>
         <mat-form-field subscriptSizing="dynamic">
           <mat-label>Result Page</mat-label>
@@ -115,7 +118,7 @@
       </form>
 
       <div class="buttons-container">
-        <button mat-raised-button color="primary" (click)="onSearch()">
+        <button mat-raised-button color="primary" [disabled]="!searchForm.valid" (click)="onSearch()">
           SEARCH
         </button>
       </div>
