@@ -1,0 +1,44 @@
+<main>
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="loginForm">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            placeholder="John Smith"
+            formControlName="name"
+            type="text"
+          />
+          @if (loginForm.get('name')?.hasError('required')) {
+          <mat-error>Name is required</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            placeholder="JohnSmith@gmail.com"
+            formControlName="email"
+            type="text"
+          />
+          @if (loginForm.get('email')?.hasError('required')) {
+          <mat-error>Email is required</mat-error>
+          } @if (loginForm.get('email')?.hasError('email')) {
+          <mat-error>Please enter a valid email</mat-error>
+          }
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="!loginForm.valid"
+        (click)="onSubmit()"
+      >
+        SUBMIT
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</main>
