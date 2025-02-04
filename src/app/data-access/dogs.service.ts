@@ -83,4 +83,14 @@ export class DogsService {
       withCredentials: true,
     });
   }
+
+  findMatch(ids: string[]) {
+    return this.#http.post<{ match: string }>(
+      `${this.#baseUrl}/dogs/match`,
+      ids,
+      {
+        withCredentials: true,
+      }
+    );
+  }
 }

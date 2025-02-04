@@ -23,7 +23,7 @@
     @if (favorites().length === 0) {
     <div mat-menu-item>No favorites added</div>
     } @else {
-    <button mat-menu-item color="accent">
+    <button mat-menu-item color="accent" (click)="findMatch()">
       <mat-icon color="accent">favorite</mat-icon>
       <span style="font-weight: bold;">FIND MY MATCH</span>
     </button>

@@ -8,7 +8,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { Dog } from '../../data-access/dogs.service';
+import { Dog, DogsService } from '../../data-access/dogs.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,6 +23,8 @@ import {
   ConfirmDialogComponent,
   IConfirmDialogData,
 } from '../confirm-dialog/confirm-dialog.component';
+import { firstValueFrom } from 'rxjs';
+import { MatchedDogDialogComponent } from '../matched-dog-dialog/matched-dog-dialog.component';
 
 const MAT_MODULES = [
   MatTableModule,
@@ -43,15 +45,16 @@ const MAT_MODULES = [
   styleUrl: './search-results.component.css',
 })
 export class SearchResultsComponent implements AfterViewInit, OnChanges {
-  readonly #snackBar = inject(MatSnackBar);
-  readonly #dialog = inject(MatDialog);
   readonly dogs = input<Dog[]>();
   readonly pageSize = input<number>(25);
   readonly allowNext = input<boolean>(false);
   readonly allowPrevious = input<boolean>(false);
   readonly total = input<number | null>(null);
-  dataSource = new MatTableDataSource<Dog>(this.dogs());
+  readonly #snackBar = inject(MatSnackBar);
+  readonly #dialog = inject(MatDialog);
+  readonly #dogsService = inject(DogsService);
 
+  dataSource = new MatTableDataSource<Dog>(this.dogs());
   displayedColumns: string[] = [
     'name',
     'img',
@@ -124,5 +127,19 @@ export class SearchResultsComponent implements AfterViewInit, OnChanges {
           }
         },
       });
+  }
+
+  async findMatch() {
+    const match = await firstValueFrom(
+      this.#dogsService.findMatch(this.favorites().map((f) => f.id))
+    );
+    const matchDog = this.favorites().find((f) => f.id === match.match);
+    console.log(matchDog, match)
+    if (matchDog) {
+      this.#dialog.open(MatchedDogDialogComponent, {
+        maxWidth: '800px',
+        data: matchDog,
+      });
+    }
   }
 }

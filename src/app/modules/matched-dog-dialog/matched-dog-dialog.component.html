@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>
+  Congratulations, you've been matched with {{ data.name }}!
+</h2>
+<div mat-dialog-content>
+  <div class="img-container">
+    <img [src]="data.img" [alt]="'Photo of ' + data.name" />
+  </div>
+  <p>
+    {{ data.name }} is a {{ data.breed }} who is {{ data.age }}
+    {{ data.age === 1 ? "year" : "years" }} old and lives in the zip code
+    {{ data.zip_code }} zip code. They cannot wait to meet you!
+  </p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>CLOSE</button>
+</div>
