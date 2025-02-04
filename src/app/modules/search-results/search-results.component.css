@@ -1,11 +1,12 @@
 .table-header {
+  box-sizing: border-box;
   display: flex;
   width: 100%;
   box-sizing: border-box;
   gap: 24px;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  padding: 16px 24px;
 }
 
 mat-form-field {

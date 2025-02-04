@@ -1,47 +1,46 @@
-<div class="table-header">
-  <mat-form-field subscriptSizing="dynamic">
-    <mat-label>Filter</mat-label>
-    <input
-      matInput
-      (keyup)="applyFilter($event)"
-      placeholder="Ex. Mia"
-      #input
-    />
-  </mat-form-field>
-  <button
-    mat-fab
-    extended
-    [matBadge]="favorites().length"
-    matBadgeColor="accent"
-    color="primary"
-    [matMenuTriggerFor]="menu"
-    aria-label="Example icon-button with a menu"
-  >
-    <mat-icon>favorite</mat-icon> Favorites
-  </button>
-  <mat-menu #menu="matMenu" xPosition="before" yPosition="below">
-    @if (favorites().length === 0) {
-    <div mat-menu-item>No favorites added</div>
-    } @else {
-    <button mat-menu-item color="accent" (click)="findMatch()">
-      <mat-icon color="accent">favorite</mat-icon>
-      <span style="font-weight: bold;">FIND MY MATCH</span>
+<mat-card class="table-container">
+  <div class="table-header">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Filter</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Ex. Mia"
+        #input
+      />
+    </mat-form-field>
+    <button
+      mat-fab
+      extended
+      [matBadge]="favorites().length"
+      matBadgeColor="accent"
+      color="primary"
+      [matMenuTriggerFor]="menu"
+      aria-label="Example icon-button with a menu"
+    >
+      <mat-icon>favorite</mat-icon> Favorites
     </button>
-    @for (fav of favorites(); track fav.id) {
-    <div mat-menu-item>
-      <mat-icon
-        [inline]="true"
-        color="primary"
-        (click)="onRemoveFavorite(fav); $event.stopPropagation()"
-        >cancel</mat-icon
-      >
-      <span>{{ fav.name }} the {{ fav.breed }}</span>
-    </div>
-    } }
-  </mat-menu>
-</div>
-
-<div class="mat-elevation-z8 table-container">
+    <mat-menu #menu="matMenu" xPosition="before" yPosition="below">
+      @if (favorites().length === 0) {
+      <div mat-menu-item>No favorites added</div>
+      } @else {
+      <button mat-menu-item color="accent" (click)="findMatch()">
+        <mat-icon color="accent">favorite</mat-icon>
+        <span style="font-weight: bold;">FIND MY MATCH</span>
+      </button>
+      @for (fav of favorites(); track fav.id) {
+      <div mat-menu-item>
+        <mat-icon
+          [inline]="true"
+          color="primary"
+          (click)="onRemoveFavorite(fav); $event.stopPropagation()"
+          >cancel</mat-icon
+        >
+        <span>{{ fav.name }} the {{ fav.breed }}</span>
+      </div>
+      } }
+    </mat-menu>
+  </div>
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
@@ -104,4 +103,4 @@
       </button>
     </div>
   </div>
-</div>
+</mat-card>

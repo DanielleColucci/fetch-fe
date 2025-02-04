@@ -25,6 +25,7 @@ import {
 } from '../confirm-dialog/confirm-dialog.component';
 import { firstValueFrom } from 'rxjs';
 import { MatchedDogDialogComponent } from '../matched-dog-dialog/matched-dog-dialog.component';
+import { MatCardModule } from '@angular/material/card';
 
 const MAT_MODULES = [
   MatTableModule,
@@ -35,6 +36,7 @@ const MAT_MODULES = [
   MatIconModule,
   MatMenuModule,
   MatBadgeModule,
+  MatCardModule,
 ];
 
 @Component({
@@ -134,7 +136,7 @@ export class SearchResultsComponent implements AfterViewInit, OnChanges {
       this.#dogsService.findMatch(this.favorites().map((f) => f.id))
     );
     const matchDog = this.favorites().find((f) => f.id === match.match);
-    console.log(matchDog, match)
+    console.log(matchDog, match);
     if (matchDog) {
       this.#dialog.open(MatchedDogDialogComponent, {
         maxWidth: '800px',
