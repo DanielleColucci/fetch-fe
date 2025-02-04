@@ -1,0 +1,28 @@
+mat-form-field {
+  width: 50%;
+}
+
+img {
+  max-height: 100px;
+}
+
+.no-data-row {
+  color: grey;
+  width: 100%;
+  height: 56px;
+}
+
+.no-data-cell {
+  width: 100%;
+  text-align: center;
+}
+
+.table-footer {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}

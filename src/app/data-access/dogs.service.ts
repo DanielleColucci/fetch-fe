@@ -20,6 +20,15 @@ export type SearchResult = {
   total: number;
 };
 
+export type Dog = {
+  age: number;
+  breed: string;
+  id: string;
+  img: string;
+  name: string;
+  zip_code: string;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -35,8 +44,10 @@ export class DogsService {
 
   async search(criteria: DogSearchCriteria) {
     const params = new URLSearchParams();
-    if (criteria.breeds?.length) params.append('breeds', criteria.breeds.join(','));
-    if (criteria.zipCodes?.length) params.append('zipCodes', criteria.zipCodes.join(','));
+    if (criteria.breeds?.length)
+      params.append('breeds', criteria.breeds.join(','));
+    if (criteria.zipCodes?.length)
+      params.append('zipCodes', criteria.zipCodes.join(','));
     if (criteria.ageMin) params.append('ageMin', criteria.ageMin.toString());
     if (criteria.ageMax) params.append('ageMax', criteria.ageMax.toString());
     if (criteria.size) params.append('size', criteria.size.toString());
@@ -44,10 +55,13 @@ export class DogsService {
     if (criteria.sortField) {
       params.append(
         'sort',
-        `${criteria.sortField}:[${
+        `${criteria.sortField}:${
           criteria.sortDirection ? criteria.sortDirection : 'asc'
-        }]`
+        }`
       );
+    }
+    if (!criteria.sortField) {
+      params.append('sort', 'breed:asc');
     }
 
     const results = await firstValueFrom(
@@ -65,7 +79,7 @@ export class DogsService {
     if (ids?.length > 100) {
       throw new Error('Too many ids');
     }
-    return this.#http.post(`${this.#baseUrl}/dogs`, ids, {
+    return this.#http.post<Dog[]>(`${this.#baseUrl}/dogs`, ids, {
       withCredentials: true,
     });
   }

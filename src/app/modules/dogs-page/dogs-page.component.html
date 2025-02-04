@@ -11,7 +11,11 @@
           <mat-label>Breeds</mat-label>
           <mat-chip-grid #chipGrid formControlName="breeds">
             @for (breed of searchForm.value.breeds; track $index) {
-            <mat-chip-row (removed)="remove('breed', breed)">
+            <mat-chip-row
+              highlighted
+              color="primary"
+              (removed)="remove('breed', breed)"
+            >
               {{ breed }}
               <button matChipRemove [attr.aria-label]="'remove ' + breed">
                 <mat-icon>cancel</mat-icon>
@@ -50,7 +54,7 @@
               [editable]="true"
               (edited)="edit(zip, $event)"
               [aria-description]="'press enter to edit ' + zip"
-              color="accent"
+              color="primary"
             >
               {{ zip }}
               <button matChipRemove [attr.aria-label]="'remove ' + zip">
@@ -93,7 +97,7 @@
             max="100"
           />
           @if (searchForm.get('size')?.hasError('max')) {
-          <mat-error>Page must be less than or equal to 100</mat-error>
+          <mat-error>Size must be less than or equal to 100</mat-error>
           }
         </mat-form-field>
         <mat-form-field subscriptSizing="dynamic">
@@ -103,6 +107,7 @@
         <mat-form-field subscriptSizing="dynamic">
           <mat-label>Sort By Field</mat-label>
           <mat-select formControlName="sortField">
+            <mat-option value="">Select...</mat-option>
             <mat-option value="breed">Breed</mat-option>
             <mat-option value="name">Name</mat-option>
             <mat-option value="age">Age</mat-option>
@@ -111,6 +116,7 @@
         <mat-form-field subscriptSizing="dynamic">
           <mat-label>Sort Direction</mat-label>
           <mat-select formControlName="sortDirection">
+            <mat-option value="">Select...</mat-option>
             <mat-option value="asc">Ascending</mat-option>
             <mat-option value="desc">Descending</mat-option>
           </mat-select>
@@ -118,10 +124,20 @@
       </form>
 
       <div class="buttons-container">
-        <button mat-raised-button color="primary" [disabled]="!searchForm.valid" (click)="onSearch()">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!searchForm.valid"
+          (click)="onSearch()"
+        >
           SEARCH
         </button>
       </div>
     </mat-expansion-panel>
   </mat-accordion>
+
+  <app-search-results
+    [dogs]="searchResults()"
+    [pageSize]="pageSize() || 25"
+  ></app-search-results>
 </main>

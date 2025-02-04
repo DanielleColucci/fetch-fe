@@ -6,7 +6,11 @@ import {
   model,
   signal,
 } from '@angular/core';
-import { DogSearchCriteria, DogsService } from '../../data-access/dogs.service';
+import {
+  Dog,
+  DogSearchCriteria,
+  DogsService,
+} from '../../data-access/dogs.service';
 import { firstValueFrom } from 'rxjs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {
@@ -30,6 +34,7 @@ import {
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { SearchResultsComponent } from '../search-results/search-results.component';
 
 const MAT_MODULES = [
   MatExpansionModule,
@@ -45,7 +50,12 @@ const MAT_MODULES = [
 @Component({
   selector: 'app-dogs-page',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, MAT_MODULES],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    SearchResultsComponent,
+    MAT_MODULES,
+  ],
   templateUrl: './dogs-page.component.html',
   styleUrl: './dogs-page.component.css',
 })
@@ -78,6 +88,8 @@ export class DogsPageComponent implements OnInit {
     sortField: ['' as 'breed' | 'name' | 'age'],
     sortDirection: ['' as 'asc' | 'desc'],
   });
+  searchResults = signal<Dog[]>([]);
+  pageSize = signal<number | null>(null);
 
   async ngOnInit() {
     const breeds = await firstValueFrom(this.#dogsService.getDogBreeds$());
@@ -140,7 +152,6 @@ export class DogsPageComponent implements OnInit {
       const index = formControl.value?.indexOf(item);
       console.log(index);
       if (index && index >= 0) {
-        console.log(formControl.value);
         formControl.setValue(
           formControl.value
             ? formControl.value.map((v: string, i: number) =>
@@ -155,6 +166,11 @@ export class DogsPageComponent implements OnInit {
   async onSearch() {
     this.#dogsService
       .search(this.searchForm.value as DogSearchCriteria)
-      .then((d) => console.log(d));
+      .then((d) => {
+        if (this.searchForm.value.size) {
+          this.pageSize.set(this.searchForm.value.size);
+        }
+        this.searchResults.set(d);
+      });
   }
 }
