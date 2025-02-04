@@ -3,8 +3,10 @@ import {
   Component,
   OnChanges,
   ViewChild,
+  inject,
   input,
   output,
+  signal,
 } from '@angular/core';
 import { Dog } from '../../data-access/dogs.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -13,6 +15,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  ConfirmDialogComponent,
+  IConfirmDialogData,
+} from '../confirm-dialog/confirm-dialog.component';
 
 const MAT_MODULES = [
   MatTableModule,
@@ -21,6 +31,8 @@ const MAT_MODULES = [
   MatInputModule,
   MatButtonModule,
   MatIconModule,
+  MatMenuModule,
+  MatBadgeModule,
 ];
 
 @Component({
@@ -31,6 +43,8 @@ const MAT_MODULES = [
   styleUrl: './search-results.component.css',
 })
 export class SearchResultsComponent implements AfterViewInit, OnChanges {
+  readonly #snackBar = inject(MatSnackBar);
+  readonly #dialog = inject(MatDialog);
   readonly dogs = input<Dog[]>();
   readonly pageSize = input<number>(25);
   readonly allowNext = input<boolean>(false);
@@ -46,6 +60,8 @@ export class SearchResultsComponent implements AfterViewInit, OnChanges {
     'zipCode',
     'favorite',
   ];
+
+  favorites = signal<Dog[]>([]);
 
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -68,7 +84,17 @@ export class SearchResultsComponent implements AfterViewInit, OnChanges {
   }
 
   onFavorite(dog: Dog) {
-    console.log('favorite', dog);
+    if (this.favorites().includes(dog)) {
+      this.#snackBar.open(
+        `${dog.name} the ${dog.breed} is already in your favorites!`,
+        'Dismiss',
+        {
+          duration: 7_000,
+        }
+      );
+    } else {
+      this.favorites.set([...this.favorites(), dog]);
+    }
   }
 
   onGetNext() {
@@ -77,5 +103,26 @@ export class SearchResultsComponent implements AfterViewInit, OnChanges {
 
   onGetPrevious() {
     this.onGetPreviousPage.emit();
+  }
+
+  onRemoveFavorite(dog: Dog) {
+    this.#dialog
+      .open(ConfirmDialogComponent, {
+        maxWidth: '500px',
+        data: {
+          title: 'Are you sure?',
+          message: `Are you sure you would like to remove ${dog.name} the ${dog.breed} from your favorites?`,
+          buttonLabel: 'YES',
+          buttonColor: 'warn',
+        } as IConfirmDialogData,
+      })
+      .afterClosed()
+      .subscribe({
+        next: (val) => {
+          if (val) {
+            this.favorites.set(this.favorites().filter((x) => x !== dog));
+          }
+        },
+      });
   }
 }

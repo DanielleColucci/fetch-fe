@@ -1,9 +1,31 @@
+.table-header {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
 mat-form-field {
-  width: 50%;
+  width: 75%;
+}
+
+.mat-mdc-menu-item > .mat-mdc-menu-item-text {
+  color: red;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  gap: 8px; 
+  align-items: center;
+  justify-content: space-between;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .table-container {
-  max-height: calc(100vh - 24px - 48px - 24px - 56px - 22px - 24px);
+  max-height: calc(100vh - 24px - 48px - 24px - 56px - 24px - 24px);
   overflow: auto;
 }
 

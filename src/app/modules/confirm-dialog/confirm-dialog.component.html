@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+  <div>{{ data.message }}</div>
+</mat-dialog-content>
+
+<div class="cris-buttons-container" mat-dialog-actions>
+  <button mat-button mat-dialog-close>CANCEL</button>
+  <button
+    mat-raised-button
+    [color]="data.buttonColor || 'warn'"
+    [mat-dialog-close]="data"
+  >
+    {{ data.buttonLabel }}
+  </button>
+</div>
