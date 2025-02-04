@@ -1,0 +1,23 @@
+<mat-toolbar color="primary">
+  <div class="flex-group">
+    <span>PET FINDER</span>
+    @if (isLoggedIn()) {
+    <mat-divider vertical="true"></mat-divider>
+    <div class="flex-subgroup">
+      <span>Browse</span>
+      <button
+        mat-icon-button
+        matTooltip="Use the form below to search for available dogs for adoption. The results will appear in the table below. Then use the favorite button to add a dog to your list of favorites. Use the Find my Match button in the favorites menu to find your one match!"
+      >
+        <mat-icon>help_outline</mat-icon>
+      </button>
+    </div>
+    }
+  </div>
+  @if (isLoggedIn()) {
+  <span class="spacer"></span>
+  <button mat-icon-button matTooltip="Logout" (click)="onLogout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+  }
+</mat-toolbar>

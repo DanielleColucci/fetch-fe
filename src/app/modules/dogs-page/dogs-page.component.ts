@@ -36,6 +36,7 @@ import {
 } from '@angular/material/autocomplete';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { SearchResultsComponent } from '../search-results/search-results.component';
+import { AuthService } from '../../data-access/auth.service';
 
 const MAT_MODULES = [
   MatExpansionModule,
@@ -62,6 +63,7 @@ const MAT_MODULES = [
 })
 export class DogsPageComponent implements OnInit {
   readonly #dogsService = inject(DogsService);
+  readonly #authService = inject(AuthService);
   readonly #fb = inject(FormBuilder);
 
   @ViewChild(MatExpansionPanel) matExpansionPanel!: MatExpansionPanel;
@@ -100,6 +102,7 @@ export class DogsPageComponent implements OnInit {
   async ngOnInit() {
     const breeds = await firstValueFrom(this.#dogsService.getDogBreeds$());
     this.breeds.set(breeds);
+    this.#authService.isLoggedIn.set(true);
   }
 
   breedSelected(event: MatAutocompleteSelectedEvent): void {

@@ -5,6 +5,7 @@ main {
   flex-direction: column;
   gap: 24px;
   padding: 24px;
+  max-height: calc(100vh- 64px);
 }
 
 mat-accordion {

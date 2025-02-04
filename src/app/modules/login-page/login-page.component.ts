@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { LoginService } from '../../data-access/login.service';
+import { AuthService } from '../../data-access/auth.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ProgressSpinnerDialogComponent } from '../progress-spinner-dialog/progress-spinner-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -24,9 +24,9 @@ const MAT_MODULES = [
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css',
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit {
   readonly #fb = inject(FormBuilder);
-  readonly #loginService = inject(LoginService);
+  readonly #authService = inject(AuthService);
   readonly #dialog = inject(MatDialog);
   readonly #snackBar = inject(MatSnackBar);
   readonly #router = inject(Router);
@@ -36,13 +36,17 @@ export class LoginPageComponent {
     email: ['', [Validators.required, Validators.email]],
   });
 
+  ngOnInit() {
+    this.#authService.isLoggedIn.set(false);
+  }
+
   async onSubmit() {
     const dialogRef: MatDialogRef<ProgressSpinnerDialogComponent> =
       this.#dialog.open(ProgressSpinnerDialogComponent, {
         panelClass: 'transparent',
         disableClose: true,
       });
-    this.#loginService
+    this.#authService
       .login(this.loginForm.value as { email: string; password: string })
       .subscribe({
         next: (res) => {

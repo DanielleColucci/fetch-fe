@@ -1,0 +1,20 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.flex-group {
+  display: flex;
+  gap: 16px;
+  height: 100%;
+  align-items: center;
+}
+
+.flex-subgroup {
+  display: flex;
+  align-items: center;
+}
+
+.mat-divider {
+  border-right: #ffffffb8 solid 2px !important;
+  height: 60%;
+}
