@@ -4,6 +4,7 @@ import {
   OnChanges,
   ViewChild,
   input,
+  output,
 } from '@angular/core';
 import { Dog } from '../../data-access/dogs.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -34,6 +35,9 @@ const MAT_MODULES = [
 export class SearchResultsComponent implements AfterViewInit, OnChanges {
   readonly dogs = input<Dog[]>();
   readonly pageSize = input<number>(25);
+  readonly allowNext = input<boolean>(false);
+  readonly allowPrevious = input<boolean>(false);
+  readonly total = input<number | null>(null);
   dataSource = new MatTableDataSource<Dog>(this.dogs());
 
   displayedColumns: string[] = [
@@ -47,6 +51,9 @@ export class SearchResultsComponent implements AfterViewInit, OnChanges {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  onGetNextPage = output<void>();
+  onGetPreviousPage = output<void>();
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -71,5 +78,13 @@ export class SearchResultsComponent implements AfterViewInit, OnChanges {
 
   onFavorite(dog: Dog) {
     console.log('favorite', dog);
+  }
+
+  onGetNext() {
+    this.onGetNextPage.emit();
+  }
+
+  onGetPrevious() {
+    this.onGetPreviousPage.emit();
   }
 }

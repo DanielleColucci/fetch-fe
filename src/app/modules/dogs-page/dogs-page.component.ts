@@ -89,6 +89,9 @@ export class DogsPageComponent implements OnInit {
     sortDirection: ['' as 'asc' | 'desc'],
   });
   searchResults = signal<Dog[]>([]);
+  nextUrl = signal<string | null>(null);
+  prevUrl = signal<string | null>(null);
+  total = signal<number | null>(null);
   pageSize = signal<number | null>(null);
 
   async ngOnInit() {
@@ -164,13 +167,44 @@ export class DogsPageComponent implements OnInit {
   }
 
   async onSearch() {
-    this.#dogsService
-      .search(this.searchForm.value as DogSearchCriteria)
-      .then((d) => {
-        if (this.searchForm.value.size) {
-          this.pageSize.set(this.searchForm.value.size);
-        }
-        this.searchResults.set(d);
-      });
+    const results = await firstValueFrom(
+      this.#dogsService.search(this.searchForm.value as DogSearchCriteria)
+    );
+    this.nextUrl.set(results.next || null);
+    this.prevUrl.set(results.prev || null);
+    this.total.set(results.total);
+    const dogs = await firstValueFrom(
+      this.#dogsService.getDogs(results.resultIds)
+    );
+    if (this.searchForm.value.size) {
+      this.pageSize.set(this.searchForm.value.size);
+    }
+    this.searchResults.set(dogs);
+  }
+
+  async onGetNext(direction: 'next' | 'prev') {
+    if (direction === 'next' && !this.nextUrl()) {
+      console.warn('No next URL');
+      return;
+    }
+    if (direction === 'prev' && !this.prevUrl()) {
+      console.warn('No previous URL');
+      return;
+    }
+    const results = await firstValueFrom(
+      this.#dogsService.searchByUrl(
+        direction === 'next' ? this.nextUrl()! : this.prevUrl()!
+      )
+    );
+    this.nextUrl.set(results.next || null);
+    this.prevUrl.set(results.prev || null);
+    this.total.set(results.total);
+    const dogs = await firstValueFrom(
+      this.#dogsService.getDogs(results.resultIds)
+    );
+    if (this.searchForm.value.size) {
+      this.pageSize.set(this.searchForm.value.size);
+    }
+    this.searchResults.set(dogs);
   }
 }

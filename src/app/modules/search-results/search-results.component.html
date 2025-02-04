@@ -44,24 +44,25 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-    <!-- Row shown when there is no matching data. -->
     <tr *matNoDataRow class="no-data-row">
       <td class="mat-cell no-data-cell" colspan="100%">No dogs to display</td>
     </tr>
   </table>
   <div class="table-footer">
-    <span>Items per page: {{ pageSize() }}</span>
+    <span
+      >Items per page: {{ pageSize() + (total() ? " of " + total() : "") }}</span
+    >
     <div>
-      <button mat-icon-button>
+      <button
+        mat-icon-button
+        [disabled]="!allowPrevious()"
+        (click)="onGetPrevious()"
+      >
         <mat-icon>navigate_before</mat-icon>
       </button>
-      <button mat-icon-button>
+      <button mat-icon-button [disabled]="!allowNext()" (click)="onGetNext()">
         <mat-icon>navigate_next</mat-icon>
       </button>
     </div>
   </div>
-  <!-- <mat-paginator
-    [pageSize]="pageSize()"
-    aria-label="Select page of users"
-  ></mat-paginator> -->
 </div>

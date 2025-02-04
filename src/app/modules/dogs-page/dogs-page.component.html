@@ -101,7 +101,7 @@
           }
         </mat-form-field>
         <mat-form-field subscriptSizing="dynamic">
-          <mat-label>Result Page</mat-label>
+          <mat-label>Beginning at Result #</mat-label>
           <input matInput formControlName="from" type="number" min="0" />
         </mat-form-field>
         <mat-form-field subscriptSizing="dynamic">
@@ -139,5 +139,10 @@
   <app-search-results
     [dogs]="searchResults()"
     [pageSize]="pageSize() || 25"
+    [allowNext]="nextUrl() ? true : false"
+    [allowPrevious]="prevUrl() ? true : false"
+    [total]="total()"
+    (onGetNextPage)="onGetNext('next')"
+    (onGetPreviousPage)="onGetNext('prev')"
   ></app-search-results>
 </main>

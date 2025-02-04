@@ -42,7 +42,7 @@ export class DogsService {
     });
   }
 
-  async search(criteria: DogSearchCriteria) {
+  search(criteria: DogSearchCriteria) {
     const params = new URLSearchParams();
     if (criteria.breeds?.length)
       params.append('breeds', criteria.breeds.join(','));
@@ -63,16 +63,10 @@ export class DogsService {
     if (!criteria.sortField) {
       params.append('sort', 'breed:asc');
     }
-
-    const results = await firstValueFrom(
-      this.#http.get<SearchResult>(`${this.#baseUrl}/dogs/search`, {
-        params: new HttpParams({ fromString: params.toString() }),
-        withCredentials: true,
-      })
-    );
-
-    const dogs = await firstValueFrom(this.getDogs(results.resultIds));
-    return dogs;
+    return this.#http.get<SearchResult>(`${this.#baseUrl}/dogs/search`, {
+      params: new HttpParams({ fromString: params.toString() }),
+      withCredentials: true,
+    });
   }
 
   getDogs(ids: string[]) {
@@ -80,6 +74,12 @@ export class DogsService {
       throw new Error('Too many ids');
     }
     return this.#http.post<Dog[]>(`${this.#baseUrl}/dogs`, ids, {
+      withCredentials: true,
+    });
+  }
+
+  searchByUrl(url: string) {
+    return this.#http.get<SearchResult>(`${this.#baseUrl}${url}`, {
       withCredentials: true,
     });
   }
