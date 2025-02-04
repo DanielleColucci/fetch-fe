@@ -2,6 +2,11 @@ mat-form-field {
   width: 50%;
 }
 
+.table-container {
+  max-height: calc(100vh - 24px - 48px - 24px - 56px - 22px - 24px);
+  overflow: auto;
+}
+
 img {
   max-height: 100px;
 }
@@ -18,6 +23,9 @@ img {
 }
 
 .table-footer {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
   width: 100%;
   box-sizing: border-box;
   padding: 16px;
