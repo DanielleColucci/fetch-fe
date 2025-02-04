@@ -6,6 +6,15 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: -64px;
+  box-sizing: border-box;
+}
+
+h1 {
+  max-width: 50%;
+  position: absolute;
+  top: 96px;
+  text-align: center;
 }
 
 mat-card {
