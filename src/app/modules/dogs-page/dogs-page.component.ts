@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  ViewChild,
   computed,
   inject,
   model,
@@ -12,7 +13,7 @@ import {
   DogsService,
 } from '../../data-access/dogs.service';
 import { firstValueFrom } from 'rxjs';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 import {
   FormBuilder,
   FormsModule,
@@ -62,6 +63,8 @@ const MAT_MODULES = [
 export class DogsPageComponent implements OnInit {
   readonly #dogsService = inject(DogsService);
   readonly #fb = inject(FormBuilder);
+
+  @ViewChild(MatExpansionPanel) matExpansionPanel!: MatExpansionPanel;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -180,6 +183,7 @@ export class DogsPageComponent implements OnInit {
       this.pageSize.set(this.searchForm.value.size);
     }
     this.searchResults.set(dogs);
+    this.matExpansionPanel.close();
   }
 
   async onGetNext(direction: 'next' | 'prev') {
